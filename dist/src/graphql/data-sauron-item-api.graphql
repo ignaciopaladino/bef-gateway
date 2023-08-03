@@ -1,0 +1,185 @@
+type User {
+    id:                ID!
+    name:              String!
+    nickname:          String!
+    email:             String!
+    phone:             Phone!
+}
+
+type Item {
+    itemDetail:             ItemDetail
+    #seller:                User
+    dimension:              DimensionItem
+    inventories:            [String] #viene en la pegada de itemDetail
+    fulfillmentRestriction: FulfillmentRestriction
+    optoutRestriction:      OptoutRestriction
+    actions:                [Action]
+}
+
+type Phone{
+    number: String!
+}
+
+type ItemDetail {
+    id:                     String
+    sellerId:               String
+    siteId:                 String
+    status:                 String
+    price:                  String
+    currencyId:             String
+    condition:              String
+    shipping:               Shipping
+    flex:                   Boolean
+    availableQuantity:      Int
+    saleTerms:              [SaleTerms]
+    thumbnail:              String
+    title:                  String
+    buyingMode:             String
+    listingTypeId:          String
+    permalink:              String
+    attributes:             [Attribute]
+    flammable:              Boolean
+    hazmatTransportability: String
+    digital:                Boolean
+    dimensionsExceeded:     Boolean
+    categoryId:             String
+    domainId:               String
+    lostMe2ByDimensions:    Boolean
+    isCpg:                  Boolean
+    unflyable:              Boolean
+}
+
+type Shipping{
+    mode:           String
+    dimensions:     String
+    localPickup:    Boolean
+    freeShipping:   Boolean
+    logisticType:   String
+    storePickUp:    Boolean
+    freeMethod:     String
+    tags:           [String]   
+}
+
+scalar Map
+
+type SaleTerms{
+    id:         String
+    valueStruc: Map
+}
+
+type DimensionItem{
+    itemId:         String
+    dimensions:     DimensionDetail
+    source:         SourceDimension
+    cubicWeight:    String
+}
+
+type DimensionDetail {
+    length: String
+    width:  String
+    height: String
+    weight: String
+}
+
+type SourceDimension {
+    origin:     String
+    identifier: String
+}
+
+type Action{
+    name:       String!
+    label:      String!
+    disabled:   Boolean!
+    reason:     String!
+    method:     String!
+    body:       [String!]
+    params:     [String!]
+}
+
+type FulfillmentRestriction{
+    restricted:         Boolean!
+    restrictionCause:   String
+}
+
+extend type Query {
+    item(id: String!): Item
+}
+
+input DimensionDetailInput {
+    id:     String!
+    length: Int!
+    width:  Int!
+    height: Int!
+    weight: Int!
+}
+
+extend type Query {
+    addDimensions(input: DimensionDetailInput!): ResponseGeneric
+}
+
+type ResponseGeneric {
+    error:      String
+    message:    String
+    status:     String
+}
+
+extend type Query {
+    removeTagFlammable(id: String): ResponseGeneric
+}
+
+extend type Query {
+    cleanDimensions(id: String): ResponseGeneric
+}
+
+type AllDimensionsItem {
+    itemID:         String
+    allEstimations: [EstimationDimensionsItem]
+}
+
+type EstimationDimensionsItem {
+    dimensions:         DimensionDetail
+	source:             SourceDimension
+	quantity:           Int
+	index:              Int
+	usedDimensions:     Boolean
+    resetEndpoint:      String
+    reestimateEndpoint: String
+}
+
+extend type Query {
+    allDimensionsItem(id: String!):                     AllDimensionsItem!
+    reestimateDimesions(id: String!, method: String!):  ResponseGeneric
+    resetDimesions(id: String!, method: String!):       ResponseGeneric
+}
+
+extend type Query {
+    updateTagUnflyable(id: String!, action: String!): ResponseGeneric
+}
+
+
+extend type Query {
+    exceptMe2(id: String!): ResponseGeneric
+}
+
+extend type Query {
+    restoreMe2(id: String!): ResponseGeneric
+}
+
+type OptoutRestriction {
+    restricted: Boolean
+    added: [String]
+    removed: [String]
+}
+
+type Attribute {
+    id: String
+    name: String
+    valueId: String
+    valueName: String
+    source: String
+}
+
+
+extend type Query {
+    disableCatalogMe2(id: String!): ResponseGeneric
+}

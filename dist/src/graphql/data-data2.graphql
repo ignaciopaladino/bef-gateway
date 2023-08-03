@@ -1,0 +1,5 @@
+type ShippingCosts {
+                    buyerCosts: UserCosts
+                    sellerCosts: UserCosts
+                    currencyID: String!
+                }

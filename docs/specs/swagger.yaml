@@ -1,0 +1,102 @@
+openapi: 3.0.3
+info:
+  title: BEF Gateway
+  description: |-
+    BEF gateway es un sistema basado en GraphQL-Mesh, que buscar brindar un acceso unificado a diferentes servicios que disponibilizan entidades de negocio, manteniendo a su vez la independencia de los servicios integrados.
+
+    Links a documentación:
+    - [Documentación (ingreso con VPN)](http://furydocs.io/bef-schema-registry/guide)
+    - [Sitio web](https://alejandria-int.prodeng-internal.mercadolibre.com/group/bef)
+  contact:
+    email: juanignacio.paladino@mercadolibre.com 
+  version: 1.1.0
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: Querys
+    description: Obtain entities from BEF
+paths:
+  /api/query:
+    post:
+      tags:
+        - Querys
+      summary: ""
+      description: Use GrpahQL to query and get the response data
+      operationId: postQuery
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Query'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'          
+        '206':
+          description: Partial operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponsePartial'             
+        400:
+          description: Invalid input
+        422:
+          description: Unprocessable Entity
+components:
+  schemas:
+    Query:
+      type: object
+      properties:
+        query:
+          type: string
+          example: 'query { shipment (id: "1111111") { id shipmentDetail { logisticType } } }'
+        variables:
+          type: string
+          example: '{ "limit": 10, }'
+      xml:
+        name: query
+    Response:
+      type: object
+      properties:
+        data:
+          type: object
+          example: '{"orders":[{"id":"111111111","external":false,"paymentDetail":{"ID":"11111111","date":"00/00/0000 00:00:00","releaseDate":"","total":1000,"currency":{"id":"ARS","symbol":"$","description":"Peso argentino","decimal_places":2},"isDisponibility":true,"originalPrice":1000,"autoPurchase":false,"fraudRiskDetected":false}}]}'
+      xml:
+        name: response
+    ResponsePartial:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'input: orders Error getting summary handling time'
+              path:
+                type: array
+                items:
+                  type: string
+                  example: "orders"
+              extensions:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 206
+                  error:
+                    type: string
+                    example: "not found"
+                  isCritical:
+                    type: boolean
+                    example: false
+        data:
+          type: object
+          example: '{"orders":[{"id":"111111111","external":false,"paymentDetail":{"ID":"11111111","date":"00/00/0000 00:00:00","releaseDate":"","total":1000,"currency":{"id":"ARS","symbol":"$","description":"Peso argentino","decimal_places":2},"isDisponibility":true,"originalPrice":1000,"autoPurchase":false,"fraudRiskDetected":false}}]}'
+      xml:
+        name: responsePatrial

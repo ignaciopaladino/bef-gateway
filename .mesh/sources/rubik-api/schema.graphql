@@ -1,0 +1,180 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+directive @oneOf on INPUT_OBJECT | FIELD_DEFINITION
+
+type Query {
+  "Ping endpoint, used to know if the app is up."
+  ping_ping_get: JSON
+  "List"
+  list_teams_get(username: String, match: String, orderTeam: TeamOrderEnum, limit: Int): [list_teams_get_response]
+  "Get By Team Code"
+  get_by_team_code_teams__team_code__get(team_code: String!): get_by_team_code_teams__team_code__get_response
+  "Get Teams By Username"
+  get_teams_by_username_teams_user__username__get(username: String!): [get_teams_by_username_teams_user__username__get_response]
+  "Get Team Collaborators"
+  get_team_collaborators_teams__team_code__collaborators_get(team_code: String!): get_team_collaborators_teams__team_code__collaborators_get_response
+  "Get Applications By Team Code"
+  get_applications_by_team_code_teams__team_code__applications_get(team_code: String!): [get_applications_by_team_code_teams__team_code__applications_get_response]
+  "List"
+  list_role_get: [RoleResponse]
+}
+
+"The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)."
+scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
+union list_teams_get_response = TeamResponse | HTTPValidationError
+
+type TeamResponse {
+  id: Int!
+  code: String!
+  name: String!
+  enabled: Boolean!
+  description: String
+}
+
+type HTTPValidationError {
+  detail: [ValidationError]
+}
+
+type ValidationError {
+  loc: [String]!
+  msg: String!
+  type: String!
+}
+
+"An enumeration."
+enum TeamOrderEnum {
+  asc
+  desc
+}
+
+union get_by_team_code_teams__team_code__get_response = TeamResponse | HTTPValidationError
+
+union get_teams_by_username_teams_user__username__get_response = TeamUserListResponse | HTTPValidationError
+
+type TeamUserListResponse {
+  id: Int!
+  code: String!
+  name: String!
+  enabled: Boolean!
+  role: String!
+  isTemporary: Boolean!
+}
+
+union get_team_collaborators_teams__team_code__collaborators_get_response = TeamUserResponse | HTTPValidationError
+
+type TeamUserResponse {
+  id: Int!
+  code: String!
+  name: String!
+  enabled: Boolean!
+  description: String
+  collaborators: [UserResponse]!
+}
+
+type UserResponse {
+  id: Int!
+  role: String!
+  username: String!
+  name: String!
+  email: String!
+  is_temporary: Boolean!
+  active: Boolean!
+  from_date: String
+  to_date: String
+  applications: [String]
+}
+
+union get_applications_by_team_code_teams__team_code__applications_get_response = String_container | HTTPValidationError
+
+type String_container {
+  String: String
+}
+
+type RoleResponse {
+  id: Int!
+  name: String!
+  description: String
+}
+
+type Mutation {
+  "Create"
+  create_teams_post(x_tiger_token: String, input: TeamRequest_Input): create_teams_post_response
+  "Update"
+  update_teams__team_code__put(x_tiger_token: String, team_code: String!, input: TeamUpdateRequest_Input): update_teams__team_code__put_response
+  "Delete"
+  delete_teams__team_code__delete(x_tiger_token: String, team_code: String!): delete_teams__team_code__delete_response
+  "Refresh"
+  refresh_teams__team_code__refresh_post(team_code: String!): refresh_teams__team_code__refresh_post_response
+  "Exit Collaborator"
+  exit_collaborator_teams_exit_collaborator_post(input: SquidExitCollaboratorMessage_Input): exit_collaborator_teams_exit_collaborator_post_response
+  "Create"
+  create_role_post(input: RoleRequest_Input): create_role_post_response
+  "Sync"
+  sync_temporary_role_sync_post: JSON
+}
+
+union create_teams_post_response = TeamResponse | HTTPValidationError
+
+input TeamRequest_Input {
+  name: String!
+  description: String
+  collaborators: [TeamUserRequest_Input]!
+}
+
+input TeamUserRequest_Input {
+  username: String!
+  role_name: String!
+  full_name: String
+  email: String!
+  from_date: DateTime
+  to_date: DateTime
+  is_temporary: Boolean!
+  active: Boolean
+  applications: [String] = []
+}
+
+"A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar."
+scalar DateTime
+
+union update_teams__team_code__put_response = Void_container | HTTPValidationError
+
+type Void_container {
+  Void: Void
+}
+
+"Represents empty values"
+scalar Void
+
+input TeamUpdateRequest_Input {
+  description: String
+  collaborators: [TeamUserRequest_Input]!
+}
+
+union delete_teams__team_code__delete_response = Void_container | HTTPValidationError
+
+union refresh_teams__team_code__refresh_post_response = Void_container | HTTPValidationError
+
+union exit_collaborator_teams_exit_collaborator_post_response = Void_container | HTTPValidationError
+
+input SquidExitCollaboratorMessage_Input {
+  msg: SquidExitCollaboratorDetail_Input!
+}
+
+input SquidExitCollaboratorDetail_Input {
+  details: SquidExitCollaboratorUsername_Input!
+}
+
+input SquidExitCollaboratorUsername_Input {
+  username: String!
+}
+
+union create_role_post_response = RoleResponse | HTTPValidationError
+
+input RoleRequest_Input {
+  name: String!
+  description: String
+}
