@@ -4,30 +4,30 @@ serve:
   cors:
     origin: '*'
 sources:
-  - name: sauron-backoffice-api
+  - name: api-1
     handler:
       graphql:
-        endpoint: http://internal.mercadolibre.com/internal/sauron-api/prod/query
+        endpoint: ENDPOINT
         source: ./src/graphql/data-sauron-backoffice-api.graphql
         retry: 2
         timeout: 5000
         operationHeaders:
           Content-Type: application/json
           accept-version: '2'
-  - name: rubik-api
+  - name: api-2
     handler:
       openapi:
-        baseUrl: https://team-api.furycloud.io
+        baseUrl: ENDPOINT
         source: ./src/json/data-rubik-api.json
         retry: 2
         timeout: 5000
         operationHeaders:
           Content-Type: application/json
           accept-version: '2'
-  - name: shipping-backoffice-core
+  - name: api-3
     handler:
       openapi:
-        baseUrl: https://internal-api.mercadolibre.com
+        baseUrl: ENDPOINT
         source: ./src/json/data-shipping-backoffice-core.json
         retry: 2
         timeout: 5000

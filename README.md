@@ -41,21 +41,3 @@ Para la ejecución de los tests locales, ejecutar:
 ````sh
 npm run test
 ````
-
-## Documentación
-
-Para más información sobre la arquitectura, el objetivo del proyecto e información relevante para empezar a consumir o 
-integrarte a `BEF` te invitamos a que pases por nuestra documentación:
-
-> <a href="http://furydocs.io/bef-schema-registry/guide" target="_blank">Documentación</a> (ingreso con VPN)
->
-> <a href="https://furydocs.io/bef-gateway/specs" target="_blank">Swagger</a> (ingreso con VPN)
->
-> <a href="https://alejandria-int.prodeng-internal.mercadolibre.com/group/bef" target="_blank">Sitio web</a>
-
-## Contacto
-
-Contactanos por slack en [#help-bef-integration](https://meli.slack.com/archives/C029D4X69HB).
-
-- 📌 Juan Ignacio Paladino juanignacio.paladino@mercadolibre.com 
-- 📌 Juan Pablo Estupinan juanpablo.estupinan@mercadolibre.com.co

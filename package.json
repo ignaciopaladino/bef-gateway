@@ -19,14 +19,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mercadolibre/fury_bef-gateway.git"
+    "url": "https://github.com/ignaciopaladino/fury_bef-gateway.git"
   },
   "author": "",
   "license": "private",
   "bugs": {
-    "url": "https://github.com/mercadolibre/fury_bef-gateway/issues"
+    "url": "https://github.com/ignaciopaladino/fury_bef-gateway/issues"
   },
-  "homepage": "https://github.com/mercadolibre/fury_bef-gateway",
+  "homepage": "https://github.com/ignaciopaladino/fury_bef-gateway",
   "dependencies": {
     "@apollo/server-plugin-landing-page-graphql-playground": "^4.0.0",
     "@graphql-mesh/cli": "^0.82.35",
